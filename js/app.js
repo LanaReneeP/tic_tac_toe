@@ -51,7 +51,28 @@ class Game {
         this.playerOne.innerText = this.players.player1
         this.playerTwo.innerText = this.players.player2
 
-        this.handleCellClicked()
+        this.getPlayerNames()
+        this.currentPlayerTurn()
+        this.handleCellClicked() 
+        this.gameRestartBtn.addEventListener('click', ()=> {
+            this.restartGame()
+        })
+    }
+
+    // meaaage
+    currentPlayerTurn() {
+        const message = `this ${this.currentPlayer}' turn`;
+        return this.gameStatus.innerText = message
+    }
+
+    drawMessage() {
+        const message = `Game ened in a draw`;
+        return this.gameStatus.innerText = message;
+    }
+
+    winMessage() {
+        const message = `Player ${this.currentPlayer} has won!`;
+        return this.gameStatus.innerText = message;
     }
 
     // 3 handle clicked cell
@@ -117,9 +138,110 @@ class Game {
         }
 
         // pick up here if(gameWon)
+        if (gameWon) {
+            const tallyMark = 'x';
+            this.winMessage();
+            const winner = this.currentPlayer;
+
+            if (winner == 'X') {
+                this.winCount.X = this.winCount.X + 1;
+                this.xWins.innerHTML += `<span class="tally"> ${tallyMark}</span>`
+            } else {
+                this.winCount.O = this.winCount.O + 1;
+                this.oWins.innerHTML += `<span class="tally"> ${tallyMark}</span>`
+            }
+
+            this.checkWinCount()
+            this.gameActive = false;
+            return;
+        }
+
+        const roundDraw = !this.gameState.includes('');
+        if (roundDraw) {
+            this.drawMessage();
+            this.gameActive = false;
+            return;
+        }
+
+        // method to change player
+        this.playerChange();
     }
 
+    playerChange() {
+        this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+        this.currentPlayerTurn();
+    }
+
+    restartGame() {
+        this.gameActive = true;
+        this.currentPlayer = 'X';
+        this.gameState = [
+            "", "", "",
+            "", "", "",
+            "", "", ""
+        ];
+        this.currentPlayerTurn();
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.innerText = '';
+            cell.classList.remove('blue');
+        })
+    }
+
+    getPlayerNames() {
+        const submitBtn = this.submitBtn;
+        const playerOne = this.playerOne;
+        const playerTwo = this.playerTwo;
+
+        submitBtn.addEventListener("click", (e)=> {
+            e.preventDefault();
+            const player1Name = document.getElementById('player1').value;
+            const player2Name = document.getElementById('player2').value;
+
+            this.players.player1 = player1Name;
+            this.players.player2 = player2Name;
+
+            playerOne.innerText = this.players.player1;
+            playerTwo.innerText = this.players.player2;
+        })
+    }
+
+    checkWinCount() {
+        let xWinTotal = this.winCount.X;
+        let oWinTotal = this.winCount.O;
+
+        if (xWinTotal == 3) {
+            this.gameStatus.innerText = `${this.players.player1} is the SUPREME VICTOR!`;
+            document.getElementById('xWins'); 
+            this.gameReload();
+        } else if (oWinTotal == 3) {
+            this.gameStatus.innerText = `${this.players.player2} is the SUPREME VICTOR!`;
+            document.getElementById('oWins'); 
+            this.gameReload();
+        } else {
+            return;
+        }
+
+        this.gameActive = false;
+    }
+
+    gameReload() {
+        setTimeout(() => {
+            this.restartGame()
+            this.xWins.innerHTML = "";
+            this.oWins.innerHTML = "";
+            this.playerOne.innerText = "Player 1";
+            this.playerTwo.innerText = "Player 2";
+            this.winCount.X = 0;
+            this.winCount.O = 0;
+            document.getElementById('player1').value = '';
+            document.getElementById('player2').value = '';
+            document.getElementById('xWins').style.backgroundImage="none"; 
+            document.getElementById('oWins').style.backgroundImage="none"; 
+        }, 3000);
+    }
 }
+
+
 
 const action = new Game()
 
