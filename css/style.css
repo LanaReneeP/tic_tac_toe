@@ -1,0 +1,49 @@
+* {box-sizing: border-box;}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #eaeae3;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    width: 450px;
+}
+
+.cell {
+    width: 150pz;
+    height: 150px;
+    font-size: 60px;
+    background-color: #fff;
+    box-shadow: 0 0 0 1px #333;
+    cursor: pointer;
+    line-height: 150px;
+    text-align: center;
+}
+
+.cell:hover {
+    background-color: #ddd;
+}
+
+.pink {
+    color: hotpink;
+}
+
+.purple {
+    color:darkmagenta
+}
+
+.wins {
+    text-decoration: underline;
+}
+
+.win-count {
+    padding: 10px;
+    width: 200px;
+    height: 200px;
+    background-color: #fff;
+    border: 1px solid #005a9c;
+    text-align: left;
+}
